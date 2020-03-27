@@ -44,7 +44,47 @@ uint8_t *otp_decrypt(uint8_t *ciphertext, uint8_t *key)
     return decrypted;
 }
 
-void ShowEncrypted(uint8_t *encrypted)
+uint8_t *getRandomkey()
+{
+    uint8_t randomBytes[200] = {}; // 200 is a random big number so we are sure we get enough letters and numbers
+    uint8_t *key;
+    int count = 0;
+    int success = 0;
+
+    key = malloc(SIZE_OF_TEXT * sizeof(uint8_t));
+
+    getrandom(randomBytes, sizeof randomBytes, 0); // puts random bytes into randomBytes
+
+    while (count != 150)
+    {
+
+        if (isalpha(randomBytes[count]) || isdigit(randomBytes[count])) // if it's a number or a letter we give it to the key
+        {
+            key[success] = randomBytes[count];
+            success++;
+            if (success > SIZE_OF_TEXT)
+            {
+                break;
+            }
+        }
+        count++;
+    }
+
+    return key;
+}
+
+void showRandomKey(uint8_t *key)
+{
+
+    int count = 0;
+    while (count != SIZE_OF_TEXT)
+    {
+        printf("==%c==\n", key[count]);
+        count++;
+    }
+}
+
+void showEncrypted(uint8_t *encrypted)
 {
     int count = 0;
     while (count != SIZE_OF_TEXT)
@@ -54,7 +94,7 @@ void ShowEncrypted(uint8_t *encrypted)
     }
 }
 
-void ShowDecrypted(uint8_t *decrypted)
+void showDecrypted(uint8_t *decrypted)
 {
     int count = 0;
     while (count != SIZE_OF_TEXT)
