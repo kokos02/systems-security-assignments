@@ -4,8 +4,9 @@
 #include <sys/random.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
-#define TextInput "hello"
+#define TextInput "Iamhurtverybadlyhelp"
 #define SIZE_OF_TEXT strlen(TextInput)
 
 uint8_t *otp_encrypt(uint8_t *plaintext, uint8_t *key)
@@ -104,7 +105,7 @@ void showDecrypted_1(uint8_t *decrypted)
     }
 }
 
-uint8_t *caesar_encrypt(uint8_t *plaintext, short N)
+uint8_t *caesar_encrypt(uint8_t *plaintext, ushort N)
 {
 
     int count = 0;
@@ -141,7 +142,7 @@ uint8_t *caesar_encrypt(uint8_t *plaintext, short N)
     return plaintext; // return the encrypted plain text
 }
 
-uint8_t *caesar_decrypt(uint8_t *ciphertext, short N)
+uint8_t *caesar_decrypt(uint8_t *ciphertext, ushort N)
 {
 
     int count = 0;
@@ -177,4 +178,60 @@ uint8_t *caesar_decrypt(uint8_t *ciphertext, short N)
     }
 
     return ciphertext; // return the decrypted text
+}
+
+uint8_t *spartan_encrypt(uint8_t *plaintext, short circ, short len)
+{
+
+    uint8_t *encrypted;
+    int loopCount = 0, iterator = 0, shouldGoBack;
+    bool endFlag = false;
+    int toAdd = 0, checkIfHashNeeded;
+
+    checkIfHashNeeded = len % circ;
+    if (checkIfHashNeeded != 0)
+    {
+        int count;
+
+        toAdd = len - (len - (circ - checkIfHashNeeded));
+
+        for (count = 1; count < toAdd + 1; count++)
+        {
+            printf("mphka\n");
+            plaintext[len + toAdd - 1] = '#';
+        }
+
+        len += toAdd;
+    }
+printf("%s\n", plaintext);
+    printf("%d\n", toAdd);
+
+    encrypted = malloc((SIZE_OF_TEXT + toAdd) * sizeof(uint8_t));
+
+    encrypted[SIZE_OF_TEXT] = '!'; //last element indicator
+
+    while (endFlag == false)
+    {
+        while (plaintext[iterator] == '!')
+        {
+            iterator++;
+        }
+
+        encrypted[loopCount] = plaintext[iterator];
+        plaintext[iterator] = '!'; // we put an ! in each cell we used so we wno't use it again
+
+        loopCount++;
+        iterator += circ;                       // we go to the next letter to put on the chiper
+        shouldGoBack = SIZE_OF_TEXT - iterator; // check if we overlow the plain text
+        if (shouldGoBack <= 0)                  // if so we go the iterator back to the begining
+        {
+            iterator = -shouldGoBack;
+        }
+        if (encrypted[SIZE_OF_TEXT] != '!')
+        {
+            endFlag = true;
+        }
+    }
+    printf("%s\n", encrypted);
+    return encrypted;
 }
