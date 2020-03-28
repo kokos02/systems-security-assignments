@@ -5,7 +5,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 
-#define TextInput "HelloWorld"
+#define TextInput "hello"
 #define SIZE_OF_TEXT strlen(TextInput)
 
 uint8_t *otp_encrypt(uint8_t *plaintext, uint8_t *key)
@@ -73,7 +73,7 @@ uint8_t *getRandomkey()
     return key;
 }
 
-void showRandomKey(uint8_t *key)
+void showRandomKey_1(uint8_t *key)
 {
 
     int count = 0;
@@ -84,17 +84,17 @@ void showRandomKey(uint8_t *key)
     }
 }
 
-void showEncrypted(uint8_t *encrypted)
+void showEncrypted_1(uint8_t *encrypted)
 {
     int count = 0;
     while (count != SIZE_OF_TEXT)
     {
-        printf("%x\n", encrypted[count]);
+        printf("%c\n", encrypted[count]);
         count++;
     }
 }
 
-void showDecrypted(uint8_t *decrypted)
+void showDecrypted_1(uint8_t *decrypted)
 {
     int count = 0;
     while (count != SIZE_OF_TEXT)
@@ -102,4 +102,79 @@ void showDecrypted(uint8_t *decrypted)
         printf("%c\n", decrypted[count]);
         count++;
     }
+}
+
+uint8_t *caesar_encrypt(uint8_t *plaintext, short N)
+{
+
+    int count = 0;
+
+    while (count != SIZE_OF_TEXT) // Loop through the plain text
+    {
+        int nestedCount = 0;
+
+        while (nestedCount != N) // for each character we change the value N times and check if we overflow the alphabet or the numbers
+        {
+
+            switch (plaintext[count])
+            {
+            case 'Z':
+                plaintext[count] = 'A';
+                nestedCount++;
+                break;
+            case 'z':
+                plaintext[count] = 'a';
+                nestedCount++;
+                break;
+            case '9':
+                plaintext[count] = '0';
+                nestedCount++;
+                break;
+            default:
+                plaintext[count]++;
+                nestedCount++;
+            }
+        }
+        count++;
+    }
+
+    return plaintext; // return the encrypted plain text
+}
+
+uint8_t *caesar_decrypt(uint8_t *ciphertext, short N)
+{
+
+    int count = 0;
+
+    while (count != SIZE_OF_TEXT) // Loop through the plain text
+    {
+        int nestedCount = N;
+
+        while (nestedCount != 0) // for each character we change the value N times and check if we overflow the alphabet or the numbers
+        {
+
+            switch (ciphertext[count])
+            {
+            case 'A':
+                ciphertext[count] = 'Z';
+                nestedCount--;
+                break;
+            case 'a':
+                ciphertext[count] = 'z';
+                nestedCount--;
+                break;
+            case '0':
+                ciphertext[count] = '9';
+                nestedCount--;
+                break;
+            default:
+                ciphertext[count]--;
+                nestedCount--;
+            }
+        }
+
+        count++;
+    }
+
+    return ciphertext; // return the decrypted text
 }
