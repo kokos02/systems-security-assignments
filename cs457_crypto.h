@@ -187,6 +187,7 @@ uint8_t *spartan_encrypt(uint8_t *plaintext, short circ, short len)
     int loopCount = 0, iterator = 0, shouldGoBack;
     bool endFlag = false;
     int toAdd = 0, checkIfHashNeeded;
+    uint8_t terminationChar = '\0';
 
     checkIfHashNeeded = len % circ;
     if (checkIfHashNeeded != 0)
@@ -197,18 +198,17 @@ uint8_t *spartan_encrypt(uint8_t *plaintext, short circ, short len)
 
         for (count = 1; count < toAdd + 1; count++)
         {
-            printf("mphka\n");
-            plaintext[len + toAdd - 1] = '#';
+            plaintext[len + count - 1] = '#';
         }
 
         len += toAdd;
     }
-printf("%s\n", plaintext);
-    printf("%d\n", toAdd);
+    printf("%s\n", plaintext);
 
-    encrypted = malloc((SIZE_OF_TEXT + toAdd) * sizeof(uint8_t));
+    encrypted = (uint8_t*) malloc((SIZE_OF_TEXT) * sizeof(uint8_t));
 
-    encrypted[SIZE_OF_TEXT] = '!'; //last element indicator
+    encrypted[SIZE_OF_TEXT + toAdd - 1] = '!'; //last element indicator
+    encrypted[SIZE_OF_TEXT + toAdd] = '\0';
 
     while (endFlag == false)
     {
@@ -221,13 +221,13 @@ printf("%s\n", plaintext);
         plaintext[iterator] = '!'; // we put an ! in each cell we used so we wno't use it again
 
         loopCount++;
-        iterator += circ;                       // we go to the next letter to put on the chiper
-        shouldGoBack = SIZE_OF_TEXT - iterator; // check if we overlow the plain text
-        if (shouldGoBack <= 0)                  // if so we go the iterator back to the begining
+        iterator += circ;                                     // we go to the next letter to put on the chiper
+        shouldGoBack = (SIZE_OF_TEXT + toAdd - 1) - iterator; // check if we overlow the plain text
+        if (shouldGoBack <= 0)                                // if so we go the iterator back to the begining
         {
             iterator = -shouldGoBack;
         }
-        if (encrypted[SIZE_OF_TEXT] != '!')
+        if (encrypted[SIZE_OF_TEXT + toAdd -1] != '!')
         {
             endFlag = true;
         }

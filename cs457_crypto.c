@@ -20,7 +20,7 @@ int main()
     decrypted = caesar_decrypt(ciphertext, 4);
     //showDecrypted_1(decrypted);
 
-    ciphertext = spartan_encrypt(plainText,6,SIZE_OF_TEXT);
+    ciphertext = spartan_encrypt(plainText,3,SIZE_OF_TEXT);
 
     return 0;
 }
