@@ -180,7 +180,7 @@ uint8_t *caesar_decrypt(uint8_t *ciphertext, ushort N)
     return ciphertext; // return the decrypted text
 }
 
-uint8_t *spartan_encrypt(uint8_t *plaintext, short circ, short len)
+uint8_t *spartan_encrypt(uint8_t *plaintext, ushort circ, ushort len)
 {
 
     uint8_t *encrypted;
@@ -203,9 +203,8 @@ uint8_t *spartan_encrypt(uint8_t *plaintext, short circ, short len)
 
         len += toAdd;
     }
-    printf("%s\n", plaintext);
 
-    encrypted = (uint8_t*) malloc((SIZE_OF_TEXT) * sizeof(uint8_t));
+    encrypted = (uint8_t *)malloc((SIZE_OF_TEXT) * sizeof(uint8_t));
 
     encrypted[SIZE_OF_TEXT + toAdd - 1] = '!'; //last element indicator
     encrypted[SIZE_OF_TEXT + toAdd] = '\0';
@@ -227,11 +226,15 @@ uint8_t *spartan_encrypt(uint8_t *plaintext, short circ, short len)
         {
             iterator = -shouldGoBack;
         }
-        if (encrypted[SIZE_OF_TEXT + toAdd -1] != '!')
+        if (encrypted[SIZE_OF_TEXT + toAdd - 1] != '!')
         {
             endFlag = true;
         }
     }
-    printf("%s\n", encrypted);
+
     return encrypted;
+}
+
+uint8_t *spartan_decrypt(uint8_t *ciphertext, ushort circ, ushort len)
+{
 }
