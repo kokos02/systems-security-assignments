@@ -7,6 +7,7 @@ int main()
     uint8_t *key;
     uint8_t *ciphertext;
     uint8_t *decrypted;
+    int a=6;
 
     key = getRandomkey();
     ciphertext = otp_encrypt(plainText, key);
@@ -20,9 +21,10 @@ int main()
     decrypted = caesar_decrypt(ciphertext, 4);
     //showDecrypted_1(decrypted);
 
-    ciphertext = spartan_encrypt(plainText, 3, SIZE_OF_TEXT);
+    ciphertext = spartan_encrypt(plainText, a, SIZE_OF_TEXT);
+    //printf("%s",ciphertext);
 
-    printf("%s\n", ciphertext);
+    decrypted =spartan_decrypt(ciphertext,a,strlen(ciphertext));
 
     return 0;
 }

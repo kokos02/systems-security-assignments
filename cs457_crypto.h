@@ -187,7 +187,6 @@ uint8_t *spartan_encrypt(uint8_t *plaintext, ushort circ, ushort len)
     int loopCount = 0, iterator = 0, shouldGoBack;
     bool endFlag = false;
     int toAdd = 0, checkIfHashNeeded;
-    uint8_t terminationChar = '\0';
 
     checkIfHashNeeded = len % circ;
     if (checkIfHashNeeded != 0)
@@ -200,8 +199,6 @@ uint8_t *spartan_encrypt(uint8_t *plaintext, ushort circ, ushort len)
         {
             plaintext[len + count - 1] = '#';
         }
-
-        len += toAdd;
     }
 
     encrypted = (uint8_t *)malloc((SIZE_OF_TEXT) * sizeof(uint8_t));
@@ -237,4 +234,46 @@ uint8_t *spartan_encrypt(uint8_t *plaintext, ushort circ, ushort len)
 
 uint8_t *spartan_decrypt(uint8_t *ciphertext, ushort circ, ushort len)
 {
+    uint8_t *decrypted;
+    uint8_t *cleargarbage;
+    int loopCount = 0, iterator = 0, shouldGoBack;
+    bool endFlag = false;
+    int toAdd = 0, checkIfHashNeeded;
+    int step;
+    //cleargarbage=ciphertext;
+    step = strlen(ciphertext) / circ;
+    printf("%s\n",decrypted);
+
+
+    decrypted = (uint8_t *)malloc((len) * sizeof(uint8_t));
+
+    decrypted[len - 1] = '!'; //last element indicator
+    decrypted[len] = '\0';
+
+    while (endFlag == false)
+    {
+        while (ciphertext[iterator] == '!')
+        {
+            iterator++;
+        }
+
+        decrypted[loopCount] = ciphertext[iterator];
+
+        
+        ciphertext[iterator] = '!'; // we put an ! in each cell we used so we wno't use it again
+
+        loopCount++;
+        iterator += step;                    // we go to the next letter to put on the chiper
+        shouldGoBack = (len - 1) - iterator; // check if we overlow the plain text
+        if (shouldGoBack <= 0)               // if so we go the iterator back to the begining
+        {
+            iterator = -shouldGoBack;
+        }
+        if (decrypted[len - 1] != '!')
+        {
+            endFlag = true;
+        }
+    }
+    printf("%s\n", decrypted);
+    return decrypted;
 }
