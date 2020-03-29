@@ -235,15 +235,11 @@ uint8_t *spartan_encrypt(uint8_t *plaintext, ushort circ, ushort len)
 uint8_t *spartan_decrypt(uint8_t *ciphertext, ushort circ, ushort len)
 {
     uint8_t *decrypted;
-    uint8_t *cleargarbage;
     int loopCount = 0, iterator = 0, shouldGoBack;
     bool endFlag = false;
     int toAdd = 0, checkIfHashNeeded;
     int step;
-    //cleargarbage=ciphertext;
     step = strlen(ciphertext) / circ;
-    printf("%s\n",decrypted);
-
 
     decrypted = (uint8_t *)malloc((len) * sizeof(uint8_t));
 

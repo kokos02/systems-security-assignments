@@ -22,7 +22,6 @@ int main()
     //showDecrypted_1(decrypted);
 
     ciphertext = spartan_encrypt(plainText, a, SIZE_OF_TEXT);
-    //printf("%s",ciphertext);
 
     decrypted =spartan_decrypt(ciphertext,a,strlen(ciphertext));
 
