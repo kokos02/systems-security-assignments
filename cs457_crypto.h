@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define TextInput "Iamhurtverybadlyhelp"
+#define TextInput "ATTACKATDAWN"
 #define SIZE_OF_TEXT strlen(TextInput)
 #define LENGTH_OF_ALPHABET 26
 #define A_ON_ASCII 65
@@ -241,7 +241,7 @@ uint8_t *spartan_encrypt(uint8_t *plaintext, int circ, int len)
     iterator = 0;
    
 
- 
+ //printf("%s\n",encrypted);
     return encrypted;
 }
 

@@ -8,7 +8,8 @@ to change the plaintext we change that. SIZE_OF_TEXT is the length of TextInput.
 One time pad:
 
 We generate the random key with the getRandomkey() function in the main function
-and then we pass the string as argument to the functions. We need to print the cipher in hex format in order not to lose any characters
+and then we pass the string as argument to the functions. We need to print the cipher
+in hex format in order not to lose any characters.
 
 Spartan encrypt: 
 

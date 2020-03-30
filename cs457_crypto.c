@@ -4,12 +4,12 @@ int main()
 {
 
     uint8_t plainText[] = TextInput;
-    uint8_t *key;
+    uint8_t key[]="DGHYUIGDYSGHUIFWGFYUWDEUIOFETUIOWFYHUI";
     uint8_t *ciphertext;
     uint8_t *decrypted;
-    int a = 20;
+    int a = 13;
 
-    key = getRandomkey();
+    //key = getRandomkey();
     //showRandomKey_1(key);
 
     ciphertext = otp_encrypt(plainText, key);
@@ -27,12 +27,12 @@ int main()
     ciphertext = spartan_encrypt(plainText, a, SIZE_OF_TEXT);
      
 
-    //decrypted = spartan_decrypt(ciphertext, a, strlen(ciphertext));
-   // printf("%s\n", decrypted);
-    //ciphertext = vigenere_encrypt(plainText,key);
+    decrypted = spartan_decrypt(ciphertext, a, strlen(ciphertext));
+    //printf("%s\n", decrypted);
+    ciphertext = vigenere_encrypt(plainText,key);
 
-    //decrypted = vigenere_decrypt(ciphertext,key);
-    //printf("%s\n",decrypted);
+    decrypted = vigenere_decrypt(ciphertext,key);
+    printf("%s\n",decrypted);
 
     return 0;
 }
