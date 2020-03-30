@@ -8,6 +8,7 @@
 
 #define TextInput "Iamhurtverybadlyhelp"
 #define SIZE_OF_TEXT strlen(TextInput)
+#define LENGTH_OF_ALPHABET 26
 
 uint8_t *otp_encrypt(uint8_t *plaintext, uint8_t *key)
 {
@@ -255,7 +256,6 @@ uint8_t *spartan_decrypt(uint8_t *ciphertext, ushort circ, ushort len)
 
         decrypted[loopCount] = ciphertext[iterator];
 
-        
         ciphertext[iterator] = '!'; // we put an ! in each cell we used so we wno't use it again
 
         loopCount++;
@@ -272,4 +272,36 @@ uint8_t *spartan_decrypt(uint8_t *ciphertext, ushort circ, ushort len)
     }
     printf("%s\n", decrypted);
     return decrypted;
+}
+
+uint8_t *vigenere_encrypt(uint8_t *plaintext, uint8_t *key)
+{
+    char alphaTable[26][26], currentLetter;
+    int iteratorRow, iteratorCol;
+
+    for (iteratorRow = 0; iteratorRow < LENGTH_OF_ALPHABET; iteratorRow++)
+    {
+        currentLetter = 'A' + iteratorRow; // Startin from A for each row we move +rowIndex to next lettter
+        for (iteratorCol = 0; iteratorCol < LENGTH_OF_ALPHABET; iteratorCol++)
+        {
+            if (iteratorCol != 0) // if we are not on the first column we go to the next letter
+            {
+                currentLetter += 1;
+            }
+           
+            if (currentLetter > 'Z') // if we reach the end of the alphabet we restart
+            {
+                currentLetter = 'A';
+            }
+            alphaTable[iteratorRow][iteratorCol] = currentLetter;
+        }
+    }
+    // for (iteratorRow = 0; iteratorRow < LENGTH_OF_ALPHABET; iteratorRow++)
+    // {
+    //     printf("\n");
+    //     for (iteratorCol = 0; iteratorCol < LENGTH_OF_ALPHABET; iteratorCol++)
+    //     {
+    //         printf("%c|", alphaTable[iteratorRow][iteratorCol]);
+    //     }
+    // }
 }

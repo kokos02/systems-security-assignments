@@ -21,9 +21,11 @@ int main()
     decrypted = caesar_decrypt(ciphertext, 4);
     //showDecrypted_1(decrypted);
 
-    ciphertext = spartan_encrypt(plainText, a, SIZE_OF_TEXT);
+    //ciphertext = spartan_encrypt(plainText, a, SIZE_OF_TEXT);
 
-    decrypted =spartan_decrypt(ciphertext,a,strlen(ciphertext));
+    //decrypted =spartan_decrypt(ciphertext,a,strlen(ciphertext));
+
+    ciphertext = vigenere_encrypt(plainText,plainText);
 
     return 0;
 }
