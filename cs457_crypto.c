@@ -4,12 +4,12 @@ int main()
 {
 
     uint8_t plainText[] = TextInput;
-    uint8_t *key;
+    uint8_t key[] = "LEMONLEMONLE";
     uint8_t *ciphertext;
     uint8_t *decrypted;
     int a=6;
 
-    key = getRandomkey();
+    //key = getRandomkey();
     ciphertext = otp_encrypt(plainText, key);
     decrypted = otp_decrypt(ciphertext, key);
     // showDecrypted_1(decrypted);
@@ -25,7 +25,8 @@ int main()
 
     //decrypted =spartan_decrypt(ciphertext,a,strlen(ciphertext));
 
-    ciphertext = vigenere_encrypt(plainText,plainText);
+    ciphertext = vigenere_encrypt(plainText,key);
+    printf("%s\n",ciphertext);
 
     return 0;
 }

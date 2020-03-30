@@ -6,9 +6,10 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define TextInput "Iamhurtverybadlyhelp"
+#define TextInput "ATTACKATDAWN"
 #define SIZE_OF_TEXT strlen(TextInput)
 #define LENGTH_OF_ALPHABET 26
+#define A_ON_ASCII 65
 
 uint8_t *otp_encrypt(uint8_t *plaintext, uint8_t *key)
 {
@@ -276,8 +277,10 @@ uint8_t *spartan_decrypt(uint8_t *ciphertext, ushort circ, ushort len)
 
 uint8_t *vigenere_encrypt(uint8_t *plaintext, uint8_t *key)
 {
-    char alphaTable[26][26], currentLetter;
-    int iteratorRow, iteratorCol;
+    uint8_t alphaTable[26][26], currentLetter;
+    int iteratorRow, iteratorCol, iterator;
+    //uint8_t encrypted[SIZE_OF_TEXT];
+    int row = 'A';
 
     for (iteratorRow = 0; iteratorRow < LENGTH_OF_ALPHABET; iteratorRow++)
     {
@@ -288,7 +291,7 @@ uint8_t *vigenere_encrypt(uint8_t *plaintext, uint8_t *key)
             {
                 currentLetter += 1;
             }
-           
+
             if (currentLetter > 'Z') // if we reach the end of the alphabet we restart
             {
                 currentLetter = 'A';
@@ -296,12 +299,11 @@ uint8_t *vigenere_encrypt(uint8_t *plaintext, uint8_t *key)
             alphaTable[iteratorRow][iteratorCol] = currentLetter;
         }
     }
-    // for (iteratorRow = 0; iteratorRow < LENGTH_OF_ALPHABET; iteratorRow++)
-    // {
-    //     printf("\n");
-    //     for (iteratorCol = 0; iteratorCol < LENGTH_OF_ALPHABET; iteratorCol++)
-    //     {
-    //         printf("%c|", alphaTable[iteratorRow][iteratorCol]);
-    //     }
-    // }
+
+    for (iterator = 0; iterator < SIZE_OF_TEXT; iterator++)
+    {
+        plaintext[iterator] = alphaTable[plaintext[iterator] - A_ON_ASCII][key[iterator] - A_ON_ASCII];
+    }
+
+    return plaintext;
 }
