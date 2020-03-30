@@ -26,7 +26,9 @@ int main()
     //decrypted =spartan_decrypt(ciphertext,a,strlen(ciphertext));
 
     ciphertext = vigenere_encrypt(plainText,key);
-    printf("%s\n",ciphertext);
+    
+    decrypted = vigenere_decrypt(ciphertext,key);
+    printf("%s\n",decrypted);
 
     return 0;
 }

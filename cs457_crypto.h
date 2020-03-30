@@ -279,8 +279,6 @@ uint8_t *vigenere_encrypt(uint8_t *plaintext, uint8_t *key)
 {
     uint8_t alphaTable[26][26], currentLetter;
     int iteratorRow, iteratorCol, iterator;
-    //uint8_t encrypted[SIZE_OF_TEXT];
-    int row = 'A';
 
     for (iteratorRow = 0; iteratorRow < LENGTH_OF_ALPHABET; iteratorRow++)
     {
@@ -306,4 +304,43 @@ uint8_t *vigenere_encrypt(uint8_t *plaintext, uint8_t *key)
     }
 
     return plaintext;
+}
+
+uint8_t *vigenere_decrypt(uint8_t *ciphertext, uint8_t *key)
+{
+
+    uint8_t alphaTable[26][26], currentLetter;
+    int iteratorRow, iteratorCol, iterator;
+    int position;
+
+    for (iteratorRow = 0; iteratorRow < LENGTH_OF_ALPHABET; iteratorRow++)
+    {
+        currentLetter = 'A' + iteratorRow; // Startin from A for each row we move +rowIndex to next lettter
+        for (iteratorCol = 0; iteratorCol < LENGTH_OF_ALPHABET; iteratorCol++)
+        {
+            if (iteratorCol != 0) // if we are not on the first column we go to the next letter
+            {
+                currentLetter += 1;
+            }
+
+            if (currentLetter > 'Z') // if we reach the end of the alphabet we restart
+            {
+                currentLetter = 'A';
+            }
+            alphaTable[iteratorRow][iteratorCol] = currentLetter;
+        }
+    }
+
+    for (iterator = 0; iterator < SIZE_OF_TEXT; iterator++)
+    {
+        int index = 0;
+        position = key[iterator];
+        while (alphaTable[key[iterator] - A_ON_ASCII][index] != ciphertext[iterator])
+        {
+            index++;
+        }
+        ciphertext[iterator] = alphaTable[0][index];
+    }
+
+    return ciphertext;
 }
