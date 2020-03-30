@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define TextInput "ATTACKATDAWN"
+#define TextInput "Iamhurtverybadlyhelp"
 #define SIZE_OF_TEXT strlen(TextInput)
 #define LENGTH_OF_ALPHABET 26
 #define A_ON_ASCII 65
@@ -18,7 +18,7 @@ uint8_t *otp_encrypt(uint8_t *plaintext, uint8_t *key)
     uint8_t currentCharacter;
     counter = 0;
 
-    encrypted = malloc(SIZE_OF_TEXT * sizeof(uint8_t));
+    encrypted = (uint8_t *)malloc(SIZE_OF_TEXT * sizeof(uint8_t));
 
     while (counter != SIZE_OF_TEXT)
     {
@@ -35,7 +35,7 @@ uint8_t *otp_decrypt(uint8_t *ciphertext, uint8_t *key)
     uint8_t currentCharacter;
     uint8_t *decrypted;
 
-    decrypted = malloc(SIZE_OF_TEXT * sizeof(uint8_t));
+    decrypted = (uint8_t *)malloc(SIZE_OF_TEXT * sizeof(uint8_t));
 
     while (count != SIZE_OF_TEXT)
     {
@@ -49,15 +49,13 @@ uint8_t *otp_decrypt(uint8_t *ciphertext, uint8_t *key)
 
 uint8_t *getRandomkey()
 {
-    uint8_t randomBytes[200] = {}; // 200 is a random big number so we are sure we get enough letters and numbers
     uint8_t *key;
-    int count = 0;
-    int success = 0;
 
-    key = malloc(SIZE_OF_TEXT * sizeof(uint8_t));
+    key = (uint8_t *)malloc(SIZE_OF_TEXT * sizeof(uint8_t));
 
-    getrandom(randomBytes, sizeof randomBytes, 0); // puts random bytes into randomBytes
-
+    getrandom(key, 2 * sizeof(key), 0); // puts random bytes into randomBytes
+    //key =randomBytes;
+    /* uncomment if we need only characters and numbers
     while (count != 150)
     {
 
@@ -72,7 +70,7 @@ uint8_t *getRandomkey()
         }
         count++;
     }
-
+*/
     return key;
 }
 
@@ -92,7 +90,7 @@ void showEncrypted_1(uint8_t *encrypted)
     int count = 0;
     while (count != SIZE_OF_TEXT)
     {
-        printf("%c\n", encrypted[count]);
+        printf("%c", encrypted[count]);
         count++;
     }
 }
@@ -182,41 +180,50 @@ uint8_t *caesar_decrypt(uint8_t *ciphertext, ushort N)
     return ciphertext; // return the decrypted text
 }
 
-uint8_t *spartan_encrypt(uint8_t *plaintext, ushort circ, ushort len)
+uint8_t *spartan_encrypt(uint8_t *plaintext, int circ, int len)
 {
 
     uint8_t *encrypted;
+    uint8_t *text;
     int loopCount = 0, iterator = 0, shouldGoBack;
     bool endFlag = false;
     int toAdd = 0, checkIfHashNeeded;
 
+
     checkIfHashNeeded = len % circ;
+
+    if (checkIfHashNeeded != 0){
+    toAdd = len - (len - (circ - checkIfHashNeeded));
+    }
+
+    text = (uint8_t *)malloc((SIZE_OF_TEXT + toAdd) * sizeof(uint8_t));
+    strcpy(text, plaintext);
     if (checkIfHashNeeded != 0)
     {
         int count;
 
-        toAdd = len - (len - (circ - checkIfHashNeeded));
-
         for (count = 1; count < toAdd + 1; count++)
         {
-            plaintext[len + count - 1] = '#';
+            text[len + count - 1] = '#';
         }
     }
 
-    encrypted = (uint8_t *)malloc((SIZE_OF_TEXT) * sizeof(uint8_t));
-
+    encrypted = (uint8_t *)malloc((SIZE_OF_TEXT + toAdd) * sizeof(uint8_t));
+  
     encrypted[SIZE_OF_TEXT + toAdd - 1] = '!'; //last element indicator
     encrypted[SIZE_OF_TEXT + toAdd] = '\0';
 
     while (endFlag == false)
     {
-        while (plaintext[iterator] == '!')
+   
+        while (text[iterator] == '!')
         {
             iterator++;
         }
+   
+        encrypted[loopCount] = text[iterator];
 
-        encrypted[loopCount] = plaintext[iterator];
-        plaintext[iterator] = '!'; // we put an ! in each cell we used so we wno't use it again
+        text[iterator] = '!'; // we put an ! in each cell we used so we wno't use it again
 
         loopCount++;
         iterator += circ;                                     // we go to the next letter to put on the chiper
@@ -225,12 +232,16 @@ uint8_t *spartan_encrypt(uint8_t *plaintext, ushort circ, ushort len)
         {
             iterator = -shouldGoBack;
         }
+
         if (encrypted[SIZE_OF_TEXT + toAdd - 1] != '!')
         {
             endFlag = true;
         }
     }
+    iterator = 0;
+   
 
+ 
     return encrypted;
 }
 
@@ -271,7 +282,6 @@ uint8_t *spartan_decrypt(uint8_t *ciphertext, ushort circ, ushort len)
             endFlag = true;
         }
     }
-    printf("%s\n", decrypted);
     return decrypted;
 }
 
@@ -300,7 +310,7 @@ uint8_t *vigenere_encrypt(uint8_t *plaintext, uint8_t *key)
 
     for (iterator = 0; iterator < SIZE_OF_TEXT; iterator++)
     {
-        plaintext[iterator] = alphaTable[plaintext[iterator] - A_ON_ASCII][key[iterator] - A_ON_ASCII];
+        plaintext[iterator] = alphaTable[plaintext[iterator] - A_ON_ASCII][key[iterator] - A_ON_ASCII]; // we subtract the A on ascii so we get the actual index of the letter in the alphabet
     }
 
     return plaintext;
