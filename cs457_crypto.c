@@ -4,35 +4,61 @@ int main()
 {
 
     uint8_t plainText[] = TextInput;
-    uint8_t key[]="DGHYUIGDYSGHUIFWGFYUWDEUIOFETUIOWFYHUI";
+    uint8_t key[] = "LEMONLEMONLE";
+    uint8_t *randomKey;
     uint8_t *ciphertext;
+    uint8_t *encrypted;
     uint8_t *decrypted;
-    int a = 13;
+    
 
-    //key = getRandomkey();
-    //showRandomKey_1(key);
+    /*==========Uncomment this block to check the otp encrypt, assign your plaintext on the TextInput 
+    //macro on the header file.============================================
+    randomKey = getRandomkey();
+    ciphertext = otp_encrypt(plainText, randomKey);
+    decrypted = otp_decrypt(ciphertext, randomKey);
+    showEncryptedOtp(ciphertext);
+    showDecryptedOtp(decrypted);
+    ==============================================*/
 
-    ciphertext = otp_encrypt(plainText, key);
-    decrypted = otp_decrypt(ciphertext, key);
-    //printf("%s\n",ciphertext);
-    // showDecrypted_1(decrypted);
-    //showEncrypted_1(ciphertext);
-    // showRandomKey_1(key);
 
-    // ciphertext = caesar_encrypt(plainText, 400);
-    // //showEncrypted_1(ciphertext);
-    // decrypted = caesar_decrypt(ciphertext, 400);
-    // showDecrypted_1(decrypted);
 
-    ciphertext = spartan_encrypt(plainText, a, SIZE_OF_TEXT);
-     
+    /*=========Uncomment this block to check the ceasar encrypt, assign your plaintext on the TextInput 
+    //macro on the header file.============================================
 
-    decrypted = spartan_decrypt(ciphertext, a, strlen(ciphertext));
-    //printf("%s\n", decrypted);
-    ciphertext = vigenere_encrypt(plainText,key);
+    encrypted = (uint8_t *)calloc((SIZE_OF_TEXT), sizeof(uint8_t));
+    ciphertext = caesar_encrypt(plainText, 4);
+    strcpy(encrypted, ciphertext);
+    decrypted = caesar_decrypt(ciphertext, 4);
+    printf("%s\n", encrypted);
+    printf("%s\n", decrypted);
 
-    decrypted = vigenere_decrypt(ciphertext,key);
-    printf("%s\n",decrypted);
+    ==============================================*/
+
+
+
+    /*=========Uncomment this block to check the spartan encrypt, assign your plaintext on the TextInput 
+    //macro on the header file.============================================
+
+    ciphertext = spartan_encrypt(plainText, 4, SIZE_OF_TEXT);
+    strcpy(encrypted, ciphertext);
+    printf("%s\n", encrypted);
+    decrypted = spartan_decrypt(encrypted, 4, strlen(encrypted));
+    printf("%s\n", decrypted);
+
+    ==============================================*/
+
+
+
+    /*=======Uncomment this block to check the vigenere encrypt, assign your plaintext on the TextInput 
+    //macro on the header file and the key at the top of the main.==========
+
+    ciphertext = vigenere_encrypt(plainText, key);
+    strcpy(encrypted, ciphertext);
+    printf("%s\n", encrypted);
+    decrypted = vigenere_decrypt(ciphertext, key);
+    printf("%s\n", decrypted);
+
+    ==============================================*/
 
     return 0;
 }

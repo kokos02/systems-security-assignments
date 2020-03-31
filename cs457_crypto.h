@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define TextInput "ATTACKATDAWN"
+#define TextInput "Iamhurtverybadlyhelp"
 #define SIZE_OF_TEXT strlen(TextInput)
 #define LENGTH_OF_ALPHABET 26
 #define A_ON_ASCII 65
@@ -39,7 +39,7 @@ uint8_t *otp_decrypt(uint8_t *ciphertext, uint8_t *key)
 
     while (count != SIZE_OF_TEXT)
     {
-        currentCharacter = ciphertext[count] ^ key[count];// to decrypt we xor each character of the ciphertext with the corresponding from the key
+        currentCharacter = ciphertext[count] ^ key[count]; // to decrypt we xor each character of the ciphertext with the corresponding from the key
         decrypted[count] = currentCharacter;
         count++;
     }
@@ -54,55 +54,29 @@ uint8_t *getRandomkey()
     key = (uint8_t *)malloc(SIZE_OF_TEXT * sizeof(uint8_t));
 
     getrandom(key, 2 * sizeof(key), 0); // puts random bytes into randomBytes
-    //key =randomBytes;
-    /* uncomment if we need only characters and numbers
-    while (count != 150)
-    {
-
-        if (isalpha(randomBytes[count]) || isdigit(randomBytes[count])) // if it's a number or a letter we give it to the key
-        {
-            key[success] = randomBytes[count];
-            success++;
-            if (success > SIZE_OF_TEXT)
-            {
-                break;
-            }
-        }
-        count++;
-    }
-*/
     return key;
 }
 
-void showRandomKey_1(uint8_t *key)
+void showEncryptedOtp(uint8_t *encrypted) //function to show the result of the otp encrypt
 {
-
     int count = 0;
     while (count != SIZE_OF_TEXT)
     {
-        printf("==%c==\n", key[count]);
+        printf("%x", encrypted[count]);
         count++;
     }
+    printf("\n");
 }
 
-void showEncrypted_1(uint8_t *encrypted)
+void showDecryptedOtp(uint8_t *decrypted) //function to show the result of the otp decrypt
 {
     int count = 0;
     while (count != SIZE_OF_TEXT)
     {
-        printf("%c", encrypted[count]);
+        printf("%c", decrypted[count]);
         count++;
     }
-}
-
-void showDecrypted_1(uint8_t *decrypted)
-{
-    int count = 0;
-    while (count != SIZE_OF_TEXT)
-    {
-        printf("%c\n", decrypted[count]);
-        count++;
-    }
+    printf("\n");
 }
 
 uint8_t *caesar_encrypt(uint8_t *plaintext, ushort N)
@@ -189,14 +163,14 @@ uint8_t *spartan_encrypt(uint8_t *plaintext, int circ, int len)
     bool endFlag = false;
     int toAdd = 0, checkIfHashNeeded;
 
-
     checkIfHashNeeded = len % circ;
 
-    if (checkIfHashNeeded != 0){
-    toAdd = len - (len - (circ - checkIfHashNeeded));
+    if (checkIfHashNeeded != 0)
+    {
+        toAdd = len - (len - (circ - checkIfHashNeeded));
     }
 
-    text = (uint8_t *)malloc((SIZE_OF_TEXT + toAdd) * sizeof(uint8_t));
+    text = (uint8_t *)calloc((SIZE_OF_TEXT + toAdd), sizeof(uint8_t));
     strcpy(text, plaintext);
     if (checkIfHashNeeded != 0)
     {
@@ -208,19 +182,19 @@ uint8_t *spartan_encrypt(uint8_t *plaintext, int circ, int len)
         }
     }
 
-    encrypted = (uint8_t *)malloc((SIZE_OF_TEXT + toAdd) * sizeof(uint8_t));
-  
+    encrypted = (uint8_t *)calloc((SIZE_OF_TEXT + toAdd), sizeof(uint8_t));
+
     encrypted[SIZE_OF_TEXT + toAdd - 1] = '!'; //last element indicator
     encrypted[SIZE_OF_TEXT + toAdd] = '\0';
 
     while (endFlag == false)
     {
-   
+
         while (text[iterator] == '!')
         {
             iterator++;
         }
-   
+
         encrypted[loopCount] = text[iterator];
 
         text[iterator] = '!'; // we put an ! in each cell we used so we wno't use it again
@@ -239,9 +213,7 @@ uint8_t *spartan_encrypt(uint8_t *plaintext, int circ, int len)
         }
     }
     iterator = 0;
-   
 
- //printf("%s\n",encrypted);
     return encrypted;
 }
 
