@@ -22,7 +22,7 @@ uint8_t *otp_encrypt(uint8_t *plaintext, uint8_t *key)
 
     while (counter != SIZE_OF_TEXT)
     {
-        currentCharacter = plaintext[counter] ^ key[counter];
+        currentCharacter = plaintext[counter] ^ key[counter]; // we xor each character of the plain text with the corresponding character from the key
         encrypted[counter] = currentCharacter;
         counter++;
     }
@@ -39,7 +39,7 @@ uint8_t *otp_decrypt(uint8_t *ciphertext, uint8_t *key)
 
     while (count != SIZE_OF_TEXT)
     {
-        currentCharacter = ciphertext[count] ^ key[count];
+        currentCharacter = ciphertext[count] ^ key[count];// to decrypt we xor each character of the ciphertext with the corresponding from the key
         decrypted[count] = currentCharacter;
         count++;
     }
