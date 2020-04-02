@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define TextInput "Iamhurtverybadlyhelp"
+#define TextInput "ATTACKATDAWN"
 #define SIZE_OF_TEXT strlen(TextInput)
 #define LENGTH_OF_ALPHABET 26
 #define A_ON_ASCII 65
@@ -261,6 +261,22 @@ uint8_t *vigenere_encrypt(uint8_t *plaintext, uint8_t *key)
 {
     uint8_t alphaTable[26][26], currentLetter;
     int iteratorRow, iteratorCol, iterator;
+    int position = 0;
+    uint8_t *encrypted;
+    uint8_t *error;
+
+    encrypted = (uint8_t *)calloc((SIZE_OF_TEXT), sizeof(uint8_t));
+    encrypted = plaintext;
+    while (position != SIZE_OF_TEXT)
+    {
+        if (!isupper(encrypted[position]) || !isupper(key[position]))
+        {
+            error = (uint8_t *)calloc((SIZE_OF_TEXT), sizeof(uint8_t));
+            printf("Only CAPITAL letters please!!! Exiting....\n");
+            return error;
+        }
+        position++;
+    }
 
     for (iteratorRow = 0; iteratorRow < LENGTH_OF_ALPHABET; iteratorRow++)
     {
@@ -282,22 +298,33 @@ uint8_t *vigenere_encrypt(uint8_t *plaintext, uint8_t *key)
 
     for (iterator = 0; iterator < SIZE_OF_TEXT; iterator++)
     {
-        plaintext[iterator] = alphaTable[plaintext[iterator] - A_ON_ASCII][key[iterator] - A_ON_ASCII]; // we subtract the A on ascii so we get the actual index of the letter in the alphabet
+        encrypted[iterator] = alphaTable[encrypted[iterator] - A_ON_ASCII][key[iterator] - A_ON_ASCII]; // we subtract the A on ascii so we get the actual index of the letter in the alphabet
     }
 
-    return plaintext;
+    return encrypted;
 }
 
 uint8_t *vigenere_decrypt(uint8_t *ciphertext, uint8_t *key)
 {
-
     uint8_t alphaTable[26][26], currentLetter;
     int iteratorRow, iteratorCol, iterator;
-    int position;
+    int position = 0;
+    uint8_t *error;
+
+    while (position != SIZE_OF_TEXT)
+    {
+        if (!isupper(ciphertext[position]) || !isupper(key[position]))
+        {
+            error = (uint8_t *)calloc((SIZE_OF_TEXT), sizeof(uint8_t));
+            printf("Only CAPITAL letters please!!! Exiting....\n");
+            return error;
+        }
+        position++;
+    }
 
     for (iteratorRow = 0; iteratorRow < LENGTH_OF_ALPHABET; iteratorRow++)
     {
-        currentLetter = 'A' + iteratorRow; // Startin from A for each row we move +rowIndex to next lettter
+        currentLetter = 'A' + iteratorRow; // Starting from A for each row we move +rowIndex to next lettter
         for (iteratorCol = 0; iteratorCol < LENGTH_OF_ALPHABET; iteratorCol++)
         {
             if (iteratorCol != 0) // if we are not on the first column we go to the next letter
@@ -316,7 +343,6 @@ uint8_t *vigenere_decrypt(uint8_t *ciphertext, uint8_t *key)
     for (iterator = 0; iterator < SIZE_OF_TEXT; iterator++)
     {
         int index = 0;
-        position = key[iterator];
         while (alphaTable[key[iterator] - A_ON_ASCII][index] != ciphertext[iterator])
         {
             index++;
