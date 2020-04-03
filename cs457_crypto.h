@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define TextInput "ATTACKATDAWN"
+#define TextInput "hello"
 #define SIZE_OF_TEXT strlen(TextInput)
 #define LENGTH_OF_ALPHABET 26
 #define A_ON_ASCII 65
@@ -81,8 +81,11 @@ void showDecryptedOtp(uint8_t *decrypted) //function to show the result of the o
 
 uint8_t *caesar_encrypt(uint8_t *plaintext, ushort N)
 {
-
+    uint8_t *encrypted;
     int count = 0;
+
+    encrypted = (uint8_t *)calloc((SIZE_OF_TEXT), sizeof(uint8_t));
+    strcpy(encrypted,plaintext);
 
     while (count != SIZE_OF_TEXT) // Loop through the plain text
     {
@@ -91,35 +94,38 @@ uint8_t *caesar_encrypt(uint8_t *plaintext, ushort N)
         while (nestedCount != N) // for each character we change the value N times and check if we overflow the alphabet or the numbers
         {
 
-            switch (plaintext[count])
+            switch (encrypted[count])
             {
             case 'Z':
-                plaintext[count] = 'A';
+                encrypted[count] = 'A';
                 nestedCount++;
                 break;
             case 'z':
-                plaintext[count] = 'a';
+                encrypted[count] = 'a';
                 nestedCount++;
                 break;
             case '9':
-                plaintext[count] = '0';
+                encrypted[count] = '0';
                 nestedCount++;
                 break;
             default:
-                plaintext[count]++;
+                encrypted[count]++;
                 nestedCount++;
             }
         }
         count++;
     }
 
-    return plaintext; // return the encrypted plain text
+    return encrypted; // return the encrypted plain text
 }
 
 uint8_t *caesar_decrypt(uint8_t *ciphertext, ushort N)
 {
-
+    uint8_t * decrypted;
     int count = 0;
+
+    decrypted = (uint8_t *)calloc((SIZE_OF_TEXT), sizeof(uint8_t));
+    strcpy(decrypted,ciphertext);
 
     while (count != SIZE_OF_TEXT) // Loop through the plain text
     {
@@ -128,22 +134,22 @@ uint8_t *caesar_decrypt(uint8_t *ciphertext, ushort N)
         while (nestedCount != 0) // for each character we change the value N times and check if we overflow the alphabet or the numbers
         {
 
-            switch (ciphertext[count])
+            switch (decrypted[count])
             {
             case 'A':
-                ciphertext[count] = 'Z';
+                decrypted[count] = 'Z';
                 nestedCount--;
                 break;
             case 'a':
-                ciphertext[count] = 'z';
+                decrypted[count] = 'z';
                 nestedCount--;
                 break;
             case '0':
-                ciphertext[count] = '9';
+                decrypted[count] = '9';
                 nestedCount--;
                 break;
             default:
-                ciphertext[count]--;
+                decrypted[count]--;
                 nestedCount--;
             }
         }
@@ -151,7 +157,7 @@ uint8_t *caesar_decrypt(uint8_t *ciphertext, ushort N)
         count++;
     }
 
-    return ciphertext; // return the decrypted text
+    return decrypted; // return the decrypted text
 }
 
 uint8_t *spartan_encrypt(uint8_t *plaintext, int circ, int len)

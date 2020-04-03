@@ -21,15 +21,15 @@ int main()
    
 
     /*=========Uncomment this block to check the ceasar encrypt, assign your plaintext on the TextInput 
-    //macro on the header file.============================================*
+    //macro on the header file.============================================*/
 
-    encrypted = (uint8_t *)calloc((SIZE_OF_TEXT), sizeof(uint8_t));
+    // encrypted = (uint8_t *)calloc((SIZE_OF_TEXT), sizeof(uint8_t));
     ciphertext = caesar_encrypt(plainText, 4);
-    strcpy(encrypted, ciphertext);
+    // strcpy(encrypted, ciphertext);
     decrypted = caesar_decrypt(ciphertext, 4);
-    printf("%s\n", encrypted);
+    printf("%s\n", ciphertext);
     printf("%s\n", decrypted);
-    */
+    
 
 
     /*=========Uncomment this block to check the spartan encrypt, assign your plaintext on the TextInput 
