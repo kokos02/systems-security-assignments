@@ -1,12 +1,14 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
-#include <sys/random.h>
 #include <ctype.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
 
-#define TextInput "Iamhurtverybadlyhelp"
+#define TextInput "ATTACKATDAWN"
 #define SIZE_OF_TEXT strlen(TextInput)
 #define LENGTH_OF_ALPHABET 26
 #define A_ON_ASCII 65
@@ -49,11 +51,29 @@ uint8_t *otp_decrypt(uint8_t *ciphertext, uint8_t *key)
 
 uint8_t *getRandomkey()
 {
+
     uint8_t *key;
 
     key = (uint8_t *)malloc(SIZE_OF_TEXT * sizeof(uint8_t));
 
-    getrandom(key, 2 * sizeof(key), 0); // puts random bytes into randomBytes
+    int randomData = open("/dev/urandom", O_RDONLY);
+
+    if (randomData < 0)
+    {
+        printf("something went wrong\n");
+        exit(1);
+    }
+    else
+    {
+        char myRandomData[50];
+        ssize_t result = read(randomData, key, sizeof myRandomData);
+        if (result < 0)
+        {
+            printf("something went wrong\n");
+            exit(1);
+        }
+    }
+
     return key;
 }
 
@@ -85,7 +105,7 @@ uint8_t *caesar_encrypt(uint8_t *plaintext, ushort N)
     int count = 0;
 
     encrypted = (uint8_t *)calloc((SIZE_OF_TEXT), sizeof(uint8_t));
-    strcpy(encrypted,plaintext);
+    strcpy(encrypted, plaintext);
 
     while (count != SIZE_OF_TEXT) // Loop through the plain text
     {
@@ -121,11 +141,11 @@ uint8_t *caesar_encrypt(uint8_t *plaintext, ushort N)
 
 uint8_t *caesar_decrypt(uint8_t *ciphertext, ushort N)
 {
-    uint8_t * decrypted;
+    uint8_t *decrypted;
     int count = 0;
 
     decrypted = (uint8_t *)calloc((SIZE_OF_TEXT), sizeof(uint8_t));
-    strcpy(decrypted,ciphertext);
+    strcpy(decrypted, ciphertext);
 
     while (count != SIZE_OF_TEXT) // Loop through the plain text
     {
@@ -188,7 +208,7 @@ uint8_t *spartan_encrypt(uint8_t *plaintext, int circ, int len)
         }
     }
 
-    encrypted = (uint8_t *)calloc((SIZE_OF_TEXT + toAdd+1), sizeof(uint8_t));
+    encrypted = (uint8_t *)calloc((SIZE_OF_TEXT + toAdd), sizeof(uint8_t *));
 
     encrypted[SIZE_OF_TEXT + toAdd - 1] = '!'; //last element indicator
     encrypted[SIZE_OF_TEXT + toAdd] = '\0';
@@ -231,8 +251,7 @@ uint8_t *spartan_decrypt(uint8_t *ciphertext, ushort circ, ushort len)
     int step;
     step = strlen(ciphertext) / circ;
 
-
-    decrypted = (uint8_t *)malloc((len) * sizeof(uint8_t));
+    decrypted = (uint8_t *)malloc((len) * sizeof(uint8_t *));
 
     decrypted[len - 1] = '!'; //last element indicator
     decrypted[len] = '\0';
