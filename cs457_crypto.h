@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define TextInput "hello"
+#define TextInput "Iamhurtverybadlyhelp"
 #define SIZE_OF_TEXT strlen(TextInput)
 #define LENGTH_OF_ALPHABET 26
 #define A_ON_ASCII 65
@@ -188,7 +188,7 @@ uint8_t *spartan_encrypt(uint8_t *plaintext, int circ, int len)
         }
     }
 
-    encrypted = (uint8_t *)calloc((SIZE_OF_TEXT + toAdd), sizeof(uint8_t));
+    encrypted = (uint8_t *)calloc((SIZE_OF_TEXT + toAdd+1), sizeof(uint8_t));
 
     encrypted[SIZE_OF_TEXT + toAdd - 1] = '!'; //last element indicator
     encrypted[SIZE_OF_TEXT + toAdd] = '\0';
@@ -218,7 +218,6 @@ uint8_t *spartan_encrypt(uint8_t *plaintext, int circ, int len)
             endFlag = true;
         }
     }
-    iterator = 0;
 
     return encrypted;
 }
@@ -231,6 +230,7 @@ uint8_t *spartan_decrypt(uint8_t *ciphertext, ushort circ, ushort len)
     int toAdd = 0, checkIfHashNeeded;
     int step;
     step = strlen(ciphertext) / circ;
+
 
     decrypted = (uint8_t *)malloc((len) * sizeof(uint8_t));
 
