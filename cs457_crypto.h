@@ -20,7 +20,7 @@ uint8_t *otp_encrypt(uint8_t *plaintext, uint8_t *key)
     uint8_t currentCharacter;
     counter = 0;
 
-    encrypted = (uint8_t *)malloc(SIZE_OF_TEXT * sizeof(uint8_t));
+    encrypted = (uint8_t *)malloc(SIZE_OF_TEXT * sizeof(uint8_t*));
 
     while (counter != SIZE_OF_TEXT)
     {
@@ -37,7 +37,7 @@ uint8_t *otp_decrypt(uint8_t *ciphertext, uint8_t *key)
     uint8_t currentCharacter;
     uint8_t *decrypted;
 
-    decrypted = (uint8_t *)malloc(SIZE_OF_TEXT * sizeof(uint8_t));
+    decrypted = (uint8_t *)malloc(SIZE_OF_TEXT * sizeof(uint8_t*));
 
     while (count != SIZE_OF_TEXT)
     {
@@ -54,7 +54,7 @@ uint8_t *getRandomkey()
 
     uint8_t *key;
 
-    key = (uint8_t *)malloc(SIZE_OF_TEXT * sizeof(uint8_t));
+    key = (uint8_t *)malloc(SIZE_OF_TEXT * sizeof(uint8_t*));
 
     int randomData = open("/dev/urandom", O_RDONLY);
 
@@ -104,7 +104,7 @@ uint8_t *caesar_encrypt(uint8_t *plaintext, ushort N)
     uint8_t *encrypted;
     int count = 0;
 
-    encrypted = (uint8_t *)calloc((SIZE_OF_TEXT), sizeof(uint8_t));
+    encrypted = (uint8_t *)calloc((SIZE_OF_TEXT), sizeof(uint8_t*));
     strcpy(encrypted, plaintext);
 
     while (count != SIZE_OF_TEXT) // Loop through the plain text
@@ -144,7 +144,7 @@ uint8_t *caesar_decrypt(uint8_t *ciphertext, ushort N)
     uint8_t *decrypted;
     int count = 0;
 
-    decrypted = (uint8_t *)calloc((SIZE_OF_TEXT), sizeof(uint8_t));
+    decrypted = (uint8_t *)calloc((SIZE_OF_TEXT), sizeof(uint8_t*));
     strcpy(decrypted, ciphertext);
 
     while (count != SIZE_OF_TEXT) // Loop through the plain text
@@ -196,7 +196,7 @@ uint8_t *spartan_encrypt(uint8_t *plaintext, int circ, int len)
         toAdd = len - (len - (circ - checkIfHashNeeded));
     }
 
-    text = (uint8_t *)calloc((SIZE_OF_TEXT + toAdd), sizeof(uint8_t));
+    text = (uint8_t *)calloc((SIZE_OF_TEXT + toAdd), sizeof(uint8_t*));
     strcpy(text, plaintext);
     if (checkIfHashNeeded != 0)
     {
@@ -290,13 +290,13 @@ uint8_t *vigenere_encrypt(uint8_t *plaintext, uint8_t *key)
     uint8_t *encrypted;
     uint8_t *error;
 
-    encrypted = (uint8_t *)calloc((SIZE_OF_TEXT), sizeof(uint8_t));
+    encrypted = (uint8_t *)calloc((SIZE_OF_TEXT), sizeof(uint8_t*));
     encrypted = plaintext;
     while (position != SIZE_OF_TEXT)
     {
         if (!isupper(encrypted[position]) || !isupper(key[position]))
         {
-            error = (uint8_t *)calloc((SIZE_OF_TEXT), sizeof(uint8_t));
+            error = (uint8_t *)calloc((SIZE_OF_TEXT), sizeof(uint8_t*));
             printf("Only CAPITAL letters please!!! Exiting....\n");
             return error;
         }
@@ -340,7 +340,7 @@ uint8_t *vigenere_decrypt(uint8_t *ciphertext, uint8_t *key)
     {
         if (!isupper(ciphertext[position]) || !isupper(key[position]))
         {
-            error = (uint8_t *)calloc((SIZE_OF_TEXT), sizeof(uint8_t));
+            error = (uint8_t *)calloc((SIZE_OF_TEXT), sizeof(uint8_t*));
             printf("Only CAPITAL letters please!!! Exiting....\n");
             return error;
         }
