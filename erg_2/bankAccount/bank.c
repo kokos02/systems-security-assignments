@@ -2,7 +2,9 @@
 #include <limits.h>
 #include <math.h>
 #include <stdlib.h>
-#define   SIZE   10
+#define SIZE 10
+
+#define UKNWOWN 5
 
 int calculatePolynomial(int degree, int point, int password, int ai[])
 {
@@ -37,59 +39,66 @@ int main()
         printf("%d\n", points[coef]);
     }
 
-     float matrix[SIZE][SIZE], x[SIZE], ratio;
-	 int row,column,k,unknown;
-	
-	 
-	
-	 /* Inputs */
-	 /* 1. Reading number of unknowns */
-	 printf("Enter number of unknowns: ");
-	 scanf("%d", &unknown);
-	 /* 2. Reading Augmented Matrix */
-	 for(row=1;row<=unknown;row++)
-	 {
-		  for(column=1;column<=unknown+1;column++)
-		  {
-			   printf("matrix[%d][%d] = ",row,column);
-			   scanf("%f", &matrix[row][column]);
-		  }
-	 }
-	/* Applying Gauss Elimination */
-	 for(row=1;row<=unknown-1;row++)
-	 {
-		  if(matrix[row][row] == 0.0)
-		  {
-			   printf("Mathematical Error!");
-			   exit(0);
-		  }
-		  for(column=row+1;column<=unknown;column++)
-		  {
-			   ratio = matrix[column][row]/matrix[row][row];
-			   
-			   for(k=1;k<=unknown+1;k++)
-			   {
-			  		matrix[column][k] = matrix[column][k] - ratio*matrix[row][k];
-			   }
-		  }
-	 }
-	 /* Obtaining Solution by Back Subsitution */
-	 x[unknown] = matrix[unknown][unknown+1]/matrix[unknown][unknown];
-	
-	 for(row=unknown-1;row>=1;row--)
-	 {
-		  x[row] = matrix[row][unknown+1];
-		  for(column=row+1;column<=unknown;column++)
-		  {
-		  		x[row] = x[row] - matrix[row][column]*x[column];
-		  }
-		  x[row] = x[row]/matrix[row][row];
-	 }
-	 /* Displaying Solution */ 
-	 printf("\nSolution:\n");
-	 for(row=1;row<=unknown;row++)
-	 {
-	  	printf("x[%d] = %0.3f\n",row, x[row]);
-	 }
+    float matrix[SIZE][SIZE], x[SIZE], ratio;
+    int row, column, k;
 
+    /* 2. Reading Augmented Matrix */
+    for (row = 1; row <= UKNWOWN; row++)
+    {
+        for (column = 1; column <= UKNWOWN + 1; column++)
+        {
+            printf("matrix[%d][%d] = ", row, column);
+            
+            switch (column)
+            {
+            case UKNWOWN:
+                matrix[row][column] = 1;
+                break;
+
+            case UKNWOWN + 1:
+                matrix[row][column] = points[row - 1];
+                break;
+
+            default:
+                matrix[row][column] = row * pow(row,4-column);
+            }
+            printf("%f\n",matrix[row][column]);
+        }
+    }
+    /* Applying Gauss Elimination */
+    for (row = 1; row <= UKNWOWN - 1; row++)
+    {
+        if (matrix[row][row] == 0.0)
+        {
+            printf("Mathematical Error!");
+            exit(0);
+        }
+        for (column = row + 1; column <= UKNWOWN; column++)
+        {
+            ratio = matrix[column][row] / matrix[row][row];
+
+            for (k = 1; k <= UKNWOWN + 1; k++)
+            {
+                matrix[column][k] = matrix[column][k] - ratio * matrix[row][k];
+            }
+        }
+    }
+    /* Obtaining Solution by Back Subsitution */
+    x[UKNWOWN] = matrix[UKNWOWN][UKNWOWN + 1] / matrix[UKNWOWN][UKNWOWN];
+
+    for (row = UKNWOWN - 1; row >= 1; row--)
+    {
+        x[row] = matrix[row][UKNWOWN + 1];
+        for (column = row + 1; column <= UKNWOWN; column++)
+        {
+            x[row] = x[row] - matrix[row][column] * x[column];
+        }
+        x[row] = x[row] / matrix[row][row];
+    }
+    /* Displaying Solution */
+    printf("\nSolution:\n");
+    for (row = 1; row <= UKNWOWN; row++)
+    {
+        printf("x[%d] = %0.3f\n", row, x[row]);
+    }
 }
