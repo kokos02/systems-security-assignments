@@ -2,9 +2,9 @@
 #include <limits.h>
 #include <math.h>
 #include <stdlib.h>
-#define SIZE 10
+#define SIZE 11
 
-#define UKNWOWN 5
+#define UKNWOWN 9
 
 int calculatePolynomial(int degree, int point, int password, int ai[])
 {
@@ -13,7 +13,7 @@ int calculatePolynomial(int degree, int point, int password, int ai[])
 
     point = password;
 
-    for (coef = 0; coef < 4; coef++)
+    for (coef = 0; coef < UKNWOWN-1; coef++)
     {
         calculation = ai[coef] * pow(degree + 1, coef + 1);
         point += calculation;
@@ -33,13 +33,13 @@ int main()
     int point;
     int coef;
 
-    for (coef = 0; coef < 5; coef++)
+    for (coef = 0; coef < UKNWOWN; coef++)
     {
         points[coef] = calculatePolynomial(coef, point, a0, ai);
         printf("%d\n", points[coef]);
     }
 
-    float matrix[SIZE][SIZE], x[SIZE], ratio;
+    long double ratio, matrix[SIZE][SIZE], x[SIZE];
     int row, column, k;
 
     /* 2. Reading Augmented Matrix */
@@ -60,17 +60,17 @@ int main()
                 break;
 
             default:
-                matrix[row][column] = row * pow(row,4-column);
+                matrix[row][column] = row * pow(row,(UKNWOWN-1)-column);
             }
-            printf("%f\n",matrix[row][column]);
+            printf("%LF\n",matrix[row][column]);
         }
     }
     /* Applying Gauss Elimination */
     for (row = 1; row <= UKNWOWN - 1; row++)
     {
-        if (matrix[row][row] == 0.0)
+        if (matrix[row][row] == 0)
         {
-            printf("Mathematical Error!");
+            printf("Mathematical Error!\n");
             exit(0);
         }
         for (column = row + 1; column <= UKNWOWN; column++)
@@ -79,7 +79,7 @@ int main()
 
             for (k = 1; k <= UKNWOWN + 1; k++)
             {
-                matrix[column][k] = matrix[column][k] - ratio * matrix[row][k];
+                matrix[column][k] = matrix[column][k] - ratio * matrix[row][k];                
             }
         }
     }
@@ -99,6 +99,6 @@ int main()
     printf("\nSolution:\n");
     for (row = 1; row <= UKNWOWN; row++)
     {
-        printf("x[%d] = %0.3f\n", row, x[row]);
+        printf("x[%d] = %LF\n", row, x[row]);
     }
 }
