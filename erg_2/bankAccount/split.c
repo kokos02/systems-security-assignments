@@ -8,14 +8,12 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <inttypes.h>
-#define SIZE 10
 
-#define UKNWOWN 5
 
-int calculatePolynomial(int degree, int point, int password, uint8_t ai[])
+unsigned long long int  calculatePolynomial(int degree, unsigned long long int  point, int password, unsigned int ai[])
 {
-    int coef;
-    int calculation;
+    unsigned long coef;
+    unsigned long calculation;
 
     point = password;
 
@@ -29,7 +27,7 @@ int calculatePolynomial(int degree, int point, int password, uint8_t ai[])
     return point;
 }
 
-unsigned int getRandomkey()
+  unsigned int getRandomkey()
 {
     unsigned int randomNumber;
     FILE *f;
@@ -38,7 +36,7 @@ unsigned int getRandomkey()
     fread(&randomNumber, sizeof(unsigned int), 1, f);
     fclose(f);
 
-    printf("%d\n", randomNumber);
+    printf("%u\n", randomNumber);
 
     return randomNumber;
 }
@@ -47,10 +45,10 @@ int main()
 {
 
     //ULONG_MAX
-    int points[10] = {};
-    int a0 = 23;
+    unsigned long long int  points[10] = {};
+    int  a0 = 23;
     unsigned int ai[8] = {};
-    int point;
+    unsigned long long int  point;
     int coef;
 
     for (int coef = 0; coef < 8; coef++)
@@ -59,9 +57,9 @@ int main()
         printf("%u\n", ai[coef]);
     }
 
-    for (coef = 0; coef < 5; coef++)
+    for (coef = 0; coef < 10; coef++)
     {
         points[coef] = calculatePolynomial(coef, point, a0, ai);
-        printf("%d\n", points[coef]);
+        printf("%llu\n", points[coef]);
     }
 }
