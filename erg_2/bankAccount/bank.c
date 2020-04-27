@@ -39,7 +39,8 @@ int main()
         printf("%d\n", points[coef]);
     }
 
-    long double ratio, matrix[SIZE][SIZE], x[SIZE];
+    long double ratio, matrix[SIZE][SIZE];
+    float x[SIZE],temp;
     int row, column, k;
 
     /* 2. Reading Augmented Matrix */
@@ -93,12 +94,13 @@ int main()
         {
             x[row] = x[row] - matrix[row][column] * x[column];
         }
-        x[row] = x[row] / matrix[row][row];
+        temp =round(x[row] / matrix[row][row]);
+        x[row]= temp;
     }
     /* Displaying Solution */
     printf("\nSolution:\n");
     for (row = 1; row <= UKNWOWN; row++)
     {
-        printf("x[%d] = %LF\n", row, x[row]);
+        printf("x[%d] = %d\n", row, (int)(x[row]));
     }
 }
