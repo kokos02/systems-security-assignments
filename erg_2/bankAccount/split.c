@@ -9,57 +9,69 @@
 #include <unistd.h>
 #include <inttypes.h>
 
-
-unsigned long long int  calculatePolynomial(int degree, unsigned long long int  point, int password, unsigned int ai[])
+unsigned long long int calculatePolynomial(int degree, unsigned long long int point, int password, unsigned char ai[])
 {
     unsigned long coef;
     unsigned long calculation;
 
     point = password;
 
-    for (coef = 0; coef < 4; coef++)
+    for (coef = 0; coef < 8; coef++)
     {
         calculation = ai[coef] * pow(degree + 1, coef + 1);
         point += calculation;
-        //printf("----->%d\n", point);
     }
-    printf("\n");
     return point;
 }
 
-  unsigned int getRandomkey()
+unsigned char getRandomkey()
 {
-    unsigned int randomNumber;
+    unsigned char randomNumber;
     FILE *f;
 
     f = fopen("/dev/random", "r");
-    fread(&randomNumber, sizeof(unsigned int), 1, f);
+    fread(&randomNumber, sizeof(unsigned char), 1, f);
     fclose(f);
-
-    printf("%u\n", randomNumber);
 
     return randomNumber;
 }
 
 int main()
 {
-
-    //ULONG_MAX
-    unsigned long long int  points[10] = {};
-    int  a0 = 23;
-    unsigned int ai[8] = {};
-    unsigned long long int  point;
+    unsigned long long int points[10] = {};
+    int a0 = 23;
+    unsigned char ai[8] = {};
+    unsigned long long int point;
     int coef;
 
-    for (int coef = 0; coef < 8; coef++)
+    for (coef = 0; coef < 8; coef++)
     {
         ai[coef] = getRandomkey();
+        while ((coef == 5 || coef == 6 || coef == 7) && ai[coef] > 20)
+        {
+            printf("again--->%u\n", ai[coef]);
+            ai[coef] = getRandomkey();
+        }
         printf("%u\n", ai[coef]);
     }
+    printf("the polyonim is: ");
+    printf("%d*X^8+ ", ai[7]);
+    for (coef = 6; coef >= 0; coef--)
+    {
+        printf("%d*X^%d+ ", ai[coef], coef + 1);
+    }
+    printf("%d\n", a0);
 
     for (coef = 0; coef < 10; coef++)
     {
         points[coef] = calculatePolynomial(coef, point, a0, ai);
         printf("%llu\n", points[coef]);
     }
+
+    FILE *pointValues;
+
+   pointValues = fopen("/tmp/test.txt", "w");
+   fprintf(pointValues, "This is testing for fprintf...\n");
+   fputs("This is testing for fputs...\n", pointValues);
+   fclose(pointValues);
 }

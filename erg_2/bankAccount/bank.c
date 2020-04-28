@@ -27,20 +27,20 @@ int main()
 {
 
     //ULONG_MAX
-    int points[10] = {};
-    int a0 = 23;
-    int ai[8] = {2, 2, 3, 4, 2, 2, 3, 3};
+    unsigned int points[10] = {};
+    int a0 = 1234567;
+    int ai[8] = {127, 127, 127, 127, 127, 127, 127, 47};
     int point;
     int coef;
 
-    for (coef = 0; coef < UKNWOWN; coef++)
+    for (coef = 0; coef < UKNWOWN+5; coef++)
     {
         points[coef] = calculatePolynomial(coef, point, a0, ai);
-        printf("%d\n", points[coef]);
+        printf("%u\n", points[coef]);
     }
 
     long double ratio, matrix[SIZE][SIZE];
-    float x[SIZE],temp;
+    double x[SIZE],temp;
     int row, column, k;
 
     /* 2. Reading Augmented Matrix */
@@ -94,13 +94,13 @@ int main()
         {
             x[row] = x[row] - matrix[row][column] * x[column];
         }
-        temp =round(x[row] / matrix[row][row]);
+        temp =x[row] / matrix[row][row];
         x[row]= temp;
     }
     /* Displaying Solution */
     printf("\nSolution:\n");
     for (row = 1; row <= UKNWOWN; row++)
     {
-        printf("x[%d] = %d\n", row, (int)(x[row]));
+        printf("x[%d] = %f\n", row, (x[row]));
     }
 }
