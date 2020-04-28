@@ -29,7 +29,7 @@ unsigned char getRandomkey()
     unsigned char randomNumber;
     FILE *f;
 
-    f = fopen("/dev/random", "r");
+    f = fopen("/dev/urandom", "r");
     fread(&randomNumber, sizeof(unsigned char), 1, f);
     fclose(f);
 
@@ -43,6 +43,7 @@ int main()
     unsigned char ai[8] = {};
     unsigned long long int point;
     int coef;
+    FILE *pointValues;
 
     for (coef = 0; coef < 8; coef++)
     {
@@ -68,10 +69,15 @@ int main()
         printf("%llu\n", points[coef]);
     }
 
-    FILE *pointValues;
+    
 
-   pointValues = fopen("/tmp/test.txt", "w");
-   fprintf(pointValues, "This is testing for fprintf...\n");
-   fputs("This is testing for fputs...\n", pointValues);
-   fclose(pointValues);
+    pointValues = fopen("pointValues.txt", "w");
+    //    fprintf(pointValues, "This is testing for fprintf...\n");
+    //    fputs("This is testing for fputs...\n", pointValues);
+    for (coef = 0; coef < 10; coef++)
+    {
+        fprintf(pointValues, "%llu\n", points[coef]);
+    }
+    
+    fclose(pointValues);
 }
