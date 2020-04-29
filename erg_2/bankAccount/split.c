@@ -40,21 +40,21 @@ int main()
 {
     unsigned long long int points[10] = {};
     int a0 = 23;
-    unsigned char ai[8] = {};
+    unsigned char ai[8] = {1,1,1,1,1,1,1,1};
     unsigned long long int point;
     int coef;
     FILE *pointValues;
 
-    for (coef = 0; coef < 8; coef++)
-    {
-        ai[coef] = getRandomkey();
-        while ((coef == 5 || coef == 6 || coef == 7) && ai[coef] > 20)
-        {
-            printf("again--->%u\n", ai[coef]);
-            ai[coef] = getRandomkey();
-        }
-        printf("%u\n", ai[coef]);
-    }
+    // for (coef = 0; coef < 8; coef++)
+    // {
+    //     ai[coef] = getRandomkey();
+    //     while ((coef == 5 || coef == 6 || coef == 7) && ai[coef] > 20)
+    //     {
+    //         printf("again--->%u\n", ai[coef]);
+    //         ai[coef] = getRandomkey();
+    //     }
+    //     printf("%u\n", ai[coef]);
+    // }
     printf("the polyonim is: ");
     printf("%d*X^8+ ", ai[7]);
     for (coef = 6; coef >= 0; coef--)

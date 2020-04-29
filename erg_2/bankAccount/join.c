@@ -1,46 +1,35 @@
 #include <stdio.h>
-#include <limits.h>
-#include <math.h>
 #include <stdlib.h>
+#include <math.h>
+
 #define SIZE 11
-
 #define UKNWOWN 9
-
-int calculatePolynomial(int degree, int point, int password, int ai[])
-{
-    int coef;
-    int calculation;
-
-    point = password;
-
-    for (coef = 0; coef < UKNWOWN-1; coef++)
-    {
-        calculation = ai[coef] * pow(degree + 1, coef + 1);
-        point += calculation;
-        //printf("----->%d\n", point);
-    }
-    printf("\n");
-    return point;
-}
 
 int main()
 {
 
-    //ULONG_MAX
-    unsigned int points[10] = {};
-    int a0 = 23;
-    int ai[8] = {1, 1, 1, 1, 1, 1, 1, 1};
-    int point;
-    int coef;
-
-    for (coef = 0; coef < UKNWOWN+5; coef++)
+    FILE *fp = fopen("pointValues.txt", "r");
+    if (fp == NULL)
     {
-        points[coef] = calculatePolynomial(coef, point, a0, ai);
-        printf("%u\n", points[coef]);
+        perror("Unable to open file!");
+        exit(1);
     }
 
+    char chunk[128];
+    unsigned int points[10] = {};
+    int iterator = 0;
+
+    while (fgets(chunk, sizeof(chunk), fp) != NULL)
+    {
+        points[iterator] = atoi(chunk);
+        printf("%d\n", points[iterator]);
+        iterator++;
+    }
+
+    fclose(fp);
+
     long double ratio, matrix[SIZE][SIZE];
-    double x[SIZE],temp;
+    double x[SIZE], temp;
     int row, column, k;
 
     /* 2. Reading Augmented Matrix */
@@ -49,7 +38,7 @@ int main()
         for (column = 1; column <= UKNWOWN + 1; column++)
         {
             printf("matrix[%d][%d] = ", row, column);
-            
+
             switch (column)
             {
             case UKNWOWN:
@@ -61,9 +50,9 @@ int main()
                 break;
 
             default:
-                matrix[row][column] = row * pow(row,(UKNWOWN-1)-column);
+                matrix[row][column] = row * pow(row, (UKNWOWN - 1) - column);
             }
-            printf("%LF\n",matrix[row][column]);
+            printf("%LF\n", matrix[row][column]);
         }
     }
     /* Applying Gauss Elimination */
@@ -80,7 +69,7 @@ int main()
 
             for (k = 1; k <= UKNWOWN + 1; k++)
             {
-                matrix[column][k] = matrix[column][k] - ratio * matrix[row][k];                
+                matrix[column][k] = matrix[column][k] - ratio * matrix[row][k];
             }
         }
     }
@@ -94,8 +83,8 @@ int main()
         {
             x[row] = x[row] - matrix[row][column] * x[column];
         }
-        temp =x[row] / matrix[row][row];
-        x[row]= temp;
+        temp = x[row] / matrix[row][row];
+        x[row] = temp;
     }
     /* Displaying Solution */
     printf("\nSolution:\n");
