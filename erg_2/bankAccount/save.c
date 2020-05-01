@@ -3,8 +3,8 @@
 #include <math.h>
 #include <string.h>
 
-#define SIZE 9 
-#define UKNWOWN 9
+#define SIZE 5
+#define UKNWOWN 5
 
 int main()
 {
@@ -52,11 +52,11 @@ int main()
                 break;
 
             case UKNWOWN + 1:
-                matrix[row][column] = points[row-1][1]; 
+                matrix[row][column] = points[row-1][1]; //-1 gia na ksekiname apo 0
                 break;
 
             default:
-                matrix[row][column] = points[row-1][0] * pow(points[row-1][0], (UKNWOWN - 1) - column);
+                matrix[row][column] = points[row][0] * pow(points[row][0], (UKNWOWN - 1) - column); // row, row gia na ksekiname apoo 0
             }
             printf("%LF\n", matrix[row][column]);
         }

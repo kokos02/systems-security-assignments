@@ -39,7 +39,7 @@ unsigned char getRandomkey()
 int main()
 {
     unsigned long long int points[10] = {};
-    int a0 = 23;
+    int a0 = 234;
     unsigned char ai[8] = {1,1,1,1,1,1,1,1};
     unsigned long long int point;
     int coef;
@@ -76,6 +76,7 @@ int main()
     //    fputs("This is testing for fputs...\n", pointValues);
     for (coef = 0; coef < 10; coef++)
     {
+        fprintf(pointValues, "%d ", coef+1);
         fprintf(pointValues, "%llu\n", points[coef]);
     }
     
