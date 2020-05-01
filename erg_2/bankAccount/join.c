@@ -3,7 +3,7 @@
 #include <math.h>
 #include <string.h>
 
-#define SIZE 9 
+#define SIZE 10
 #define UKNWOWN 9
 
 int main()
@@ -21,14 +21,14 @@ int main()
     int iterator = 0;
     char *token;
 
-    while (fgets(chunk, sizeof(chunk), fp) != NULL)
+    while (fgets(chunk, sizeof(chunk), fp) != NULL) // read the index and the value of each point from the file f(1)=..., f(2)=...., ....., f(10)=...
     {
         token = strtok(chunk, " ");
         points[iterator][0] = atoi(token);
         token = strtok(NULL, " ");
         points[iterator][1] = atoi(token);
-        printf("%d ", points[iterator][0]);
-        printf("%d\n", points[iterator][1]);
+        // printf("%d ", points[iterator][0]);
+        // printf("%u\n", points[iterator][1]);
         iterator++;
     }
 
@@ -39,26 +39,35 @@ int main()
     int row, column, k;
 
     /* 2. Reading Augmented Matrix */
+    /* example
+    1	   1	1	1	1	34
+	16	   8	4	2	1	123
+	81	   27	9	3	1	452
+	256	   64	16	4	1	1279
+	625	   125	25	5	1	2958
+	1296   216	36	6	1	5939 
+    */
+
     for (row = 1; row <= UKNWOWN; row++)
     {
         for (column = 1; column <= UKNWOWN + 1; column++)
         {
-            printf("matrix[%d][%d] = ", row, column);
+            //printf("matrix[%d][%d] = ", row, column);
 
             switch (column)
             {
-            case UKNWOWN:
+            case UKNWOWN: // second to last column always 1 because x^0 == 1
                 matrix[row][column] = 1;
                 break;
 
-            case UKNWOWN + 1:
-                matrix[row][column] = points[row-1][1]; 
+            case UKNWOWN + 1: // last is always the result of the polynomial
+                matrix[row][column] = points[row - 1][1];
                 break;
 
             default:
-                matrix[row][column] = points[row-1][0] * pow(points[row-1][0], (UKNWOWN - 1) - column);
+                matrix[row][column] = points[row - 1][0] * pow(points[row - 1][0], (UKNWOWN - 1) - column);
             }
-            printf("%LF\n", matrix[row][column]);
+            //printf("%LF\n", matrix[row][column]);
         }
     }
     /* Applying Gauss Elimination */
@@ -93,9 +102,7 @@ int main()
         x[row] = temp;
     }
     /* Displaying Solution */
-    printf("\nSolution:\n");
-    for (row = 1; row <= UKNWOWN; row++)
-    {
-        printf("x[%d] = %f\n", row, (x[row]));
-    }
+    printf("\nThe password is: ");
+
+    printf("%d\n", (int)ceil(x[UKNWOWN]));
 }
