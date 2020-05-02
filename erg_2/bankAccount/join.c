@@ -104,5 +104,5 @@ int main()
     /* Displaying Solution */
     printf("\nThe password is: ");
 
-    printf("%d\n", (int)ceil(x[UKNWOWN]));
+    printf("%d\n", (int)round(x[UKNWOWN]));
 }
