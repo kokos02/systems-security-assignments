@@ -29,7 +29,7 @@ unsigned char getRandomkey()
     unsigned char randomNumber;
     FILE *f;
 
-    f = fopen("/dev/urandom", "r");
+    f = fopen("/dev/random", "r");
     fread(&randomNumber, sizeof(unsigned char), 1, f);
     fclose(f);
 
@@ -38,7 +38,7 @@ unsigned char getRandomkey()
 
 int main()
 {
-    unsigned long long int points[10] = {};
+    long int points[10] = {};
     int a0 = 1234567;
     unsigned char ai[8] = {};
     unsigned long long int point;
@@ -48,12 +48,12 @@ int main()
 
     printf("\nThe password is %d\n\n", a0);
 
-    printf("Generating rundom numbers\n\n");
+    printf("Generating random numbers\n\n");
     for (coef = 0; coef < 8; coef++)
     {
         ai[coef] = getRandomkey();
         // we put some restrictions in order not to have overflows
-        while ((/*coef == 5 || coef == 6 ||*/ coef == 7) && ai[coef] > 20)
+        while ((coef == 7 || coef == 6) && ai[coef] > 36)
         {
             //printf("again--->%u\n", ai[coef]);
             ai[coef] = getRandomkey();
@@ -71,7 +71,7 @@ int main()
     for (coef = 0; coef < 10; coef++)
     {
         points[coef] = calculatePolynomial(coef, point, a0, ai);
-        printf("f(%d) = %llu\n", coef + 1, points[coef]);
+        printf("f(%d) = %ld\n", coef + 1, points[coef]);
     }
 
     printf("\nplease enter a number in range 0-10 to exlude that password when we join in 2050. If you anything else, 10 will be discarder automatically!!!\n");
@@ -94,7 +94,7 @@ int main()
         }
 
         fprintf(pointValues, "%d ", coef + 1);
-        fprintf(pointValues, "%llu\n", points[coef]);
+        fprintf(pointValues, "%ld\n", points[coef]);
     }
 
     fclose(pointValues);
