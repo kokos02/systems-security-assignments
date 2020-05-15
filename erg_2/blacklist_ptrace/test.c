@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <time.h>
 
 int main()
 {
     int pid = fork();
-
+    time_t seconds; 
     if (pid == 0)
     {
         printf("\nHello from Child!\n");
@@ -20,7 +21,7 @@ int main()
 
     pid = fork();
 
-     if (pid == 0)
+    if (pid == 0)
     {
         printf("\nHeyyyyy I'm the child Child!\n");
     }
@@ -32,9 +33,9 @@ int main()
         printf("Hahahaha it's Parent again\n");
     }
 
-     pid = fork();
+    pid = fork();
 
-     if (pid == 0)
+    if (pid == 0)
     {
         printf("\nChildddddd!\n");
     }
@@ -45,6 +46,9 @@ int main()
 
         printf("Only PARENT!!!! survives after injection\n");
     }
+
+    seconds = time(NULL);
+    alarm(2); 
 
     return 0;
 }

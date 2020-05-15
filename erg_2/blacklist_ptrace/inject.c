@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+
 void init_system_call_table(char system_call_table[357][20])
 {
 
@@ -53,7 +54,7 @@ void init_system_call_table(char system_call_table[357][20])
     fclose(system_calls);
 }
 
-void init_blacklist(char blacklist[4][20])
+void init_blacklist(char blacklist[8][20])
 {
 
     FILE *blacklist_file;
@@ -76,12 +77,11 @@ void init_blacklist(char blacklist[4][20])
     }
 }
 
-int check_blacklist(long sys_call_number, char blacklist[4][20], char system_call_table[357][20])
+int check_blacklist(long sys_call_number, char blacklist[8][20], char system_call_table[357][20])
 {
 
     int blacklist_iterator;
-    //printf("%s+\n",system_call_table[120]);
-    for (blacklist_iterator = 0; blacklist_iterator < 4; blacklist_iterator++)
+    for (blacklist_iterator = 0; blacklist_iterator < 8; blacklist_iterator++)
     {
         if (!strcmp(system_call_table[sys_call_number], blacklist[blacklist_iterator]))
         {
@@ -95,7 +95,7 @@ int check_blacklist(long sys_call_number, char blacklist[4][20], char system_cal
 int main()
 {
     char system_call_table[357][20] = {};
-    char blacklist[4][20] = {};
+    char blacklist[8][20] = {};
     pid_t pid;
     int wait_status;
     int enter_syscall = 1;
@@ -109,7 +109,6 @@ int main()
 
     init_system_call_table(system_call_table);
     init_blacklist(blacklist);
-    printf("line-> %s\n", system_call_table[4]);
 
     pid = fork();
 
@@ -126,6 +125,7 @@ int main()
         while (1)
         {
             orig_eax = ptrace(PTRACE_PEEKUSER, pid, 4 * ORIG_EAX, NULL); // we get the current system call number
+
 
             if (check_blacklist((int)orig_eax, blacklist, system_call_table))
             {

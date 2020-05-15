@@ -1,4 +1,8 @@
 clone
 fork
-exec
-fstat
+time
+mkdir
+nice
+rmdir
+pipe
+alarm
