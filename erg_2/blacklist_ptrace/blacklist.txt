@@ -1,0 +1,4 @@
+clone
+fork
+exec
+fstat
