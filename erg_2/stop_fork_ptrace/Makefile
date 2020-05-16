@@ -18,3 +18,6 @@ clean:
 run:
 	./inject
 
+run_test:
+	./test
+
