@@ -29,7 +29,7 @@ unsigned char getRandomkey()
     unsigned char randomNumber;
     FILE *f;
 
-    f = fopen("/dev/random", "r");
+    f = fopen("/dev/urandom", "r");
     fread(&randomNumber, sizeof(unsigned char), 1, f);
     fclose(f);
 
@@ -38,7 +38,7 @@ unsigned char getRandomkey()
 
 int main()
 {
-    long int points[10] = {};
+    long long int points[10] = {};
     int a0 = 1234567;
     unsigned char ai[8] = {};
     unsigned long long int point;
@@ -71,7 +71,7 @@ int main()
     for (coef = 0; coef < 10; coef++)
     {
         points[coef] = calculatePolynomial(coef, point, a0, ai);
-        printf("f(%d) = %ld\n", coef + 1, points[coef]);
+        printf("f(%d) = %lld\n", coef + 1, points[coef]);
     }
 
     printf("\nplease enter a number in range 0-10 to exlude that password when we join in 2050. If you anything else, 10 will be discarder automatically!!!\n");
@@ -94,7 +94,7 @@ int main()
         }
 
         fprintf(pointValues, "%d ", coef + 1);
-        fprintf(pointValues, "%ld\n", points[coef]);
+        fprintf(pointValues, "%lld\n", points[coef]);
     }
 
     fclose(pointValues);

@@ -7,81 +7,107 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define SYSTEM_CALLS_NUMBER 357
+#define BLACKLIST_SYSTEM_CALLS_NUMBER 8
+#define SYSTEM_CALL_LENGTH 20
+#define BYTES_FOR_SYS_CALL_STRING 50
+#define BYTES_FOR_WHOLE_LINE_STRING 70
+#define NO_SYS_CALL_NUM_0 222
+#define NO_SYS_CALL_NUM_1 223
+#define NO_SYS_CALL_NUM_2 251
+#define NO_SYS_CALL_NUM_3 285
+#define NO_SYS_CALL_NUM_4 355
+#define SINGLE_DIGIT_NUM_SYS_CALL_NUM_ELIMINATOR 3
+#define TWO_DIGIT_NUM_SYS_CALL_NUM_ELIMINATOR 4
+#define THREE_DIGIT_NUM_SYS_CALL_NUM_ELIMINATOR 5
+#define GETPID_NUMBER 20
 
-void init_system_call_table(char system_call_table[357][20])
+void init_system_call_table(char system_call_table[SYSTEM_CALLS_NUMBER][SYSTEM_CALL_LENGTH])
 {
 
     FILE *system_calls;
-    char *line = malloc(50 * sizeof(char));
+    char *line = malloc(BYTES_FOR_SYS_CALL_STRING * sizeof(char)); // we allocate just enough bytes for our string
     int sys_count;
 
     system_calls = fopen("/usr/include/i386-linux-gnu/asm/unistd_32.h", "r");
 
     //we move to the first actual system call
-    fgets(line, 1000, system_calls);
-    fgets(line, 1000, system_calls);
-    fgets(line, 1000, system_calls);
-    fgets(line, 1000, system_calls);
+    fgets(line, BYTES_FOR_WHOLE_LINE_STRING, system_calls);
+    fgets(line, BYTES_FOR_WHOLE_LINE_STRING, system_calls);
+    fgets(line, BYTES_FOR_WHOLE_LINE_STRING, system_calls);
+    fgets(line, BYTES_FOR_WHOLE_LINE_STRING, system_calls);
 
-    for (sys_count = 0; sys_count < 357; sys_count++)
+    for (sys_count = 0; sys_count < SYSTEM_CALLS_NUMBER; sys_count++)
     {
-        if (sys_count == 222 || sys_count == 223 || sys_count == 251 || sys_count == 285 || sys_count == 355)
+        if (sys_count == NO_SYS_CALL_NUM_0 || sys_count == NO_SYS_CALL_NUM_1 || sys_count == NO_SYS_CALL_NUM_2 || sys_count == NO_SYS_CALL_NUM_3 || sys_count == NO_SYS_CALL_NUM_4) // numbers with no assigned system call
         {
             continue;
         }
-        line += 13;
+
+        line += 13; // this way we wliminate #define __NR_
+
+        //eliminate the number next to the system call depending on the digits each time
         if (sys_count < 10)
         {
-            line[strlen(line) - 3] = '\0';
+            line[strlen(line) - SINGLE_DIGIT_NUM_SYS_CALL_NUM_ELIMINATOR] = '\0';
         }
         else if (sys_count < 100)
         {
-            line[strlen(line) - 4] = '\0';
+            line[strlen(line) - TWO_DIGIT_NUM_SYS_CALL_NUM_ELIMINATOR] = '\0';
         }
         else
         {
-            line[strlen(line) - 5] = '\0';
+            line[strlen(line) - THREE_DIGIT_NUM_SYS_CALL_NUM_ELIMINATOR] = '\0';
         }
 
-        //line[strlen(line) - 3] = '\0';
+        // insert the system call to our system call table
         strcpy(system_call_table[sys_count], line);
-        //printf("line-> %s\n", system_call_table[sys_count]);
-        memset(line, 0, strlen(line));
-        line = malloc(50 * sizeof(char));
 
-        fgets(line, 1000, system_calls);
+        // clear and reallocate the line
+        memset(line, 0, strlen(line));
+        line = malloc(BYTES_FOR_SYS_CALL_STRING * sizeof(char));
+
+        // go to next line
+        fgets(line, BYTES_FOR_WHOLE_LINE_STRING, system_calls);
     }
+
     fclose(system_calls);
 }
 
-void init_blacklist(char blacklist[8][20])
+void init_blacklist(char blacklist[BLACKLIST_SYSTEM_CALLS_NUMBER][SYSTEM_CALL_LENGTH])
 {
 
     FILE *blacklist_file;
     blacklist_file = fopen("blacklist.txt", "r");
     int index = 0;
-    char *line = malloc(50 * sizeof(char));
+    char *line = malloc(BYTES_FOR_SYS_CALL_STRING * sizeof(char));
 
-    while (fgets(line, 20, blacklist_file) != NULL)
+    while (fgets(line, SYSTEM_CALL_LENGTH, blacklist_file) != NULL)
     {
 
+        //if the system call is not the last in blacklist we eliminate the '\n' character
         if (line[strlen(line) - 1] == '\n')
         {
             line[strlen(line) - 2] = '\0';
         }
 
+        // insert the blacklisted system call to our blacklist table
         strcpy(blacklist[index], line);
         index++;
+
+        // clear and reallocate the line
         memset(line, 0, strlen(line));
-        line = malloc(50 * sizeof(char));
+        line = malloc(BYTES_FOR_SYS_CALL_STRING * sizeof(char));
     }
 }
 
-int check_blacklist(long sys_call_number, char blacklist[8][20], char system_call_table[357][20])
+int check_blacklist(long sys_call_number, char blacklist[BLACKLIST_SYSTEM_CALLS_NUMBER][SYSTEM_CALL_LENGTH], char system_call_table[SYSTEM_CALLS_NUMBER][SYSTEM_CALL_LENGTH])
 {
 
     int blacklist_iterator;
-    for (blacklist_iterator = 0; blacklist_iterator < 8; blacklist_iterator++)
+
+    //we find the sys_call_number in the system call table and if it exists also in the blacklist table we retun 1 otherwise 0
+    for (blacklist_iterator = 0; blacklist_iterator < BLACKLIST_SYSTEM_CALLS_NUMBER; blacklist_iterator++)
     {
         if (!strcmp(system_call_table[sys_call_number], blacklist[blacklist_iterator]))
         {
@@ -94,19 +120,19 @@ int check_blacklist(long sys_call_number, char blacklist[8][20], char system_cal
 
 int main()
 {
-    char system_call_table[357][20] = {};
-    char blacklist[8][20] = {};
+    char system_call_table[SYSTEM_CALLS_NUMBER][SYSTEM_CALL_LENGTH] = {};
+    char blacklist[BLACKLIST_SYSTEM_CALLS_NUMBER][SYSTEM_CALL_LENGTH] = {};
     pid_t pid;
     int wait_status;
     int enter_syscall = 1;
     long orig_eax;
-    int injected_system_call = 20; //getpid
     int prohibited_calls_counter = 0;
     int total_calls_counter = 0;
     int unique_calls_counter = 0;
-    int system_calls_appearance[357]={0};
+    int system_calls_appearance[SYSTEM_CALLS_NUMBER] = {0};
     int system_call_iterator;
 
+    //populate system call and blacklist table
     init_system_call_table(system_call_table);
     init_blacklist(blacklist);
 
@@ -114,9 +140,9 @@ int main()
 
     if (pid == 0)
     {
-        ptrace(PTRACE_TRACEME, NULL, NULL, NULL); // indice that this process should
+        ptrace(PTRACE_TRACEME, NULL, NULL, NULL); // indicate that this process should
         //be traced by it's parent trace MEEEE!!!!
-        execl("./test", "test", NULL); //displays date from bin/date file
+        execl("./test", "test", NULL); //it will trace the execution of the test file
     }
     else if (pid > 0)
     {
@@ -126,11 +152,11 @@ int main()
         {
             orig_eax = ptrace(PTRACE_PEEKUSER, pid, 4 * ORIG_EAX, NULL); // we get the current system call number
 
-
-            if (check_blacklist((int)orig_eax, blacklist, system_call_table))
+            //if the current system call is in the blacklist
+            if (check_blacklist(orig_eax, blacklist, system_call_table))
             {
-                printf("blacklisted call: %ld.\n", orig_eax);
-                ptrace(PTRACE_POKEUSER, pid, 4 * ORIG_EAX, injected_system_call);
+                printf("\nblacklisted call: %ld changed to getpid\n\n", orig_eax);
+                ptrace(PTRACE_POKEUSER, pid, 4 * ORIG_EAX, GETPID_NUMBER); // we change it to getpid
                 prohibited_calls_counter++;
             }
 
@@ -144,6 +170,8 @@ int main()
             {
                 enter_syscall = 1;
             }
+
+            //restart stopped tracee but arrange to stop in the next system call
             ptrace(PTRACE_SYSCALL, pid, NULL, NULL);
             wait(&wait_status);
 
@@ -158,16 +186,18 @@ int main()
         printf("fork error\n");
     }
 
-    for (system_call_iterator = 0; system_call_iterator < 357; system_call_iterator++)
+    //we check if each system call was executed but count it only once
+    for (system_call_iterator = 0; system_call_iterator < SYSTEM_CALLS_NUMBER; system_call_iterator++)
     {
-    	if (system_calls_appearance[system_call_iterator] > 0)
-    	{
-    		unique_calls_counter++;
-    	}
+        if (system_calls_appearance[system_call_iterator] > 0)
+        {
+            unique_calls_counter++;
+        }
     }
 
     printf("total system calls executed: %d\n", total_calls_counter);
     printf("unique system calls executed: %d\n", unique_calls_counter);
     printf("prohibited system calls executed: %d\n", prohibited_calls_counter);
+
     return 0;
 }

@@ -14,4 +14,6 @@ join.o: join.c
 	gcc -c join.c
 
 clean:
-	rm *.o split join
+	rm *.o split join pointValues.txt
+
+

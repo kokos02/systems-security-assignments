@@ -19,3 +19,6 @@ clean:
 run:
 	LD_PRELOAD=./inject.so ./test_my_fork
 
+run_no_ld_preload:
+	./test_my_fork
+

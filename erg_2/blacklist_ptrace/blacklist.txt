@@ -1,8 +1,8 @@
 clone
 fork
-time
 mkdir
 nice
+time
 rmdir
 pipe
 alarm
